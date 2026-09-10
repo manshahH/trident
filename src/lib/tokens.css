@@ -1,0 +1,49 @@
+:root {
+  --color-surface: #1c1c1f;
+  --color-text: #f5f5f7;
+  --color-idle: #8a8a8e;
+  --orb-height: 44px;
+  --orb-width: 240px;
+  --orb-radius: 22px;
+  --space-orb: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: transparent;
+  color: var(--color-text);
+  font-family: system-ui, sans-serif;
+}
+
+.orb {
+  align-items: center;
+  background: var(--color-surface);
+  border-radius: var(--orb-radius);
+  display: flex;
+  gap: var(--space-orb);
+  height: var(--orb-height);
+  padding-inline: var(--space-orb);
+  width: var(--orb-width);
+}
+
+.orb__dot {
+  background: var(--color-idle);
+  border-radius: 50%;
+  height: var(--space-orb);
+  width: var(--space-orb);
+}
+
+.window-placeholder {
+  background: var(--color-surface);
+  min-height: 100vh;
+}
