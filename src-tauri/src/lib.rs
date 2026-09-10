@@ -3,6 +3,7 @@ pub mod config;
 pub mod db;
 pub mod error;
 pub mod logging;
+pub mod platform;
 pub mod state;
 pub mod tray;
 pub mod windows;
@@ -12,8 +13,12 @@ use tauri_plugin_dialog::{DialogExt, MessageDialogKind};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let specta = tauri_specta::Builder::<tauri::Wry>::new()
-        .commands(tauri_specta::collect_commands![commands::system::health]);
+    let specta =
+        tauri_specta::Builder::<tauri::Wry>::new().commands(tauri_specta::collect_commands![
+            commands::orb::orb_begin_drag,
+            commands::orb::orb_dropped,
+            commands::system::health
+        ]);
 
     #[cfg(debug_assertions)]
     if let Err(error) = specta.export(
@@ -58,6 +63,7 @@ fn initialize<R: Runtime + 'static>(app: &mut App<R>) -> error::Result<()> {
     );
     app.manage(logging);
     app.manage(state::AppState::new(database));
+    windows::orb::initialize(app)?;
     tray::create(app).map_err(|error| error::AppError::Internal(error.to_string()))?;
     Ok(())
 }

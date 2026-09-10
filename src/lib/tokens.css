@@ -40,11 +40,17 @@ body {
   align-items: center;
   background: var(--surface);
   border-radius: var(--radius-pill);
+  cursor: grab;
   display: flex;
   gap: var(--space-orb);
   height: var(--orb-height);
   padding-inline: var(--space-orb);
+  user-select: none;
   width: var(--orb-width);
+}
+
+.orb:active {
+  cursor: grabbing;
 }
 
 .orb__dot {

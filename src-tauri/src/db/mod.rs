@@ -3,7 +3,7 @@ pub mod migrations;
 use std::{path::Path, time::Duration};
 
 use parking_lot::Mutex;
-use rusqlite::Connection;
+use rusqlite::{Connection, OptionalExtension};
 
 use crate::error::Result;
 
@@ -37,6 +37,28 @@ impl Db {
             Ok(true)
         })
     }
+
+    pub fn setting_value(&self, key: &str) -> Result<Option<String>> {
+        self.with_connection(|connection| {
+            connection
+                .query_row("SELECT value FROM settings WHERE key = ?1", [key], |row| {
+                    row.get(0)
+                })
+                .optional()
+                .map_err(Into::into)
+        })
+    }
+
+    pub fn set_setting_value(&self, key: &str, value: &str) -> Result<()> {
+        self.with_connection(|connection| {
+            connection.execute(
+                "INSERT INTO settings (key, value) VALUES (?1, ?2) \
+                 ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+                (key, value),
+            )?;
+            Ok(())
+        })
+    }
 }
 
 #[cfg(test)]
@@ -53,6 +75,22 @@ mod tests {
         let result = Db::open(&database_path, 1_700_000_000_000);
 
         assert!(matches!(result, Err(crate::error::AppError::Db(_))));
+        Ok(())
+    }
+
+    #[test]
+    fn stores_and_reads_a_setting_value() -> crate::error::Result<()> {
+        let directory = TempDir::new()?;
+        let database_path = directory.path().join("trident.db");
+        let database = Db::open(&database_path, 1_700_000_000_000)?;
+
+        database.set_setting_value("orb.position", "saved")?;
+
+        assert_eq!(
+            database.setting_value("orb.position")?,
+            Some("saved".to_owned())
+        );
+        assert_eq!(database.setting_value("missing")?, None);
         Ok(())
     }
 }

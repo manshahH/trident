@@ -13,6 +13,7 @@ pub struct HealthDto {
     pub version: String,
 }
 
+#[derive(Clone)]
 pub struct AppState {
     database: Arc<Db>,
 }
@@ -31,6 +32,10 @@ impl AppState {
             platform_error_count: 0,
             version: env!("CARGO_PKG_VERSION").to_owned(),
         })
+    }
+
+    pub fn database(&self) -> &Db {
+        self.database.as_ref()
     }
 }
 

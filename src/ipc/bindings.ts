@@ -5,6 +5,22 @@
 
 
 export const commands = {
+async orbBeginDrag() : Promise<Result<null, AppError>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("orb_begin_drag") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async orbDropped(physicalX: number, physicalY: number) : Promise<Result<DockDto, AppError>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("orb_dropped", { physicalX, physicalY }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async health() : Promise<Result<HealthDto, AppError>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("health") };
@@ -26,6 +42,8 @@ async health() : Promise<Result<HealthDto, AppError>> {
 /** user-defined types **/
 
 export type AppError = { kind: "Db"; detail: string } | { kind: "Migration"; detail: { version: number; message: string } } | { kind: "NotFound"; detail: { entity: string; id: string } } | { kind: "InvalidState"; detail: string } | { kind: "Validation"; detail: { field: string; message: string } } | { kind: "Platform"; detail: { api: string; code: number } } | { kind: "HotkeyConflict"; detail: string } | { kind: "WindowMissing"; detail: string } | { kind: "Io"; detail: string } | { kind: "Internal"; detail: string }
+export type DockDto = { monitor_name: string; physical_x: number; physical_y: number; edge: DockEdge | null }
+export type DockEdge = "Left" | "Right" | "Top" | "Bottom"
 export type HealthDto = { database_ok: boolean; watcher_last_tick_age_ms: number | null; platform_error_count: number; version: string }
 
 /** tauri-specta globals **/
