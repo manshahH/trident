@@ -30,6 +30,13 @@ impl Db {
         let connection = self.connection.lock();
         operation(&connection)
     }
+
+    pub fn is_healthy(&self) -> Result<bool> {
+        self.with_connection(|connection| {
+            connection.query_row("SELECT 1", [], |row| row.get::<_, i64>(0))?;
+            Ok(true)
+        })
+    }
 }
 
 #[cfg(test)]

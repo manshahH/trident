@@ -27,6 +27,7 @@ pub fn apply(connection: &mut Connection, applied_at: i64) -> Result<()> {
     }
 
     for version in (current_version + 1)..=LATEST_VERSION {
+        tracing::info!(version, "applying database migration");
         migrate(&transaction, version).map_err(|error| AppError::Migration {
             version,
             message: error.to_string(),

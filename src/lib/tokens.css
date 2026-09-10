@@ -1,10 +1,21 @@
 :root {
-  --color-surface: #1c1c1f;
-  --color-text: #f5f5f7;
-  --color-idle: #8a8a8e;
+  --surface: #16171A;
+  --surface-alpha: 0.82;
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.12);
+  --text-primary: #ECECEE;
+  --text-secondary: #8A8A93;
+  --text-muted: #55565C;
+  --accent-live: #6FD3A8;
+  --accent-drift: #E2795F;
+  --radius-pill: 999px;
+  --radius-panel: 16px;
+  --radius-control: 8px;
+  --dur: 180ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --font: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
   --orb-height: 44px;
   --orb-width: 240px;
-  --orb-radius: 22px;
   --space-orb: 12px;
 }
 
@@ -21,14 +32,14 @@ body,
 
 body {
   background: transparent;
-  color: var(--color-text);
-  font-family: system-ui, sans-serif;
+  color: var(--text-primary);
+  font-family: var(--font);
 }
 
 .orb {
   align-items: center;
-  background: var(--color-surface);
-  border-radius: var(--orb-radius);
+  background: var(--surface);
+  border-radius: var(--radius-pill);
   display: flex;
   gap: var(--space-orb);
   height: var(--orb-height);
@@ -37,13 +48,13 @@ body {
 }
 
 .orb__dot {
-  background: var(--color-idle);
+  background: var(--text-secondary);
   border-radius: 50%;
   height: var(--space-orb);
   width: var(--space-orb);
 }
 
 .window-placeholder {
-  background: var(--color-surface);
+  background: var(--surface);
   min-height: 100vh;
 }
